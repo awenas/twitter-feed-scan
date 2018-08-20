@@ -51,6 +51,6 @@ spec:
     targetPort: ${PORT}
   selector:
     app: twitter-feed
+    color: blue
   type: ClusterIP
-  color: blue
 ---

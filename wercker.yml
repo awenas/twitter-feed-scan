@@ -12,6 +12,7 @@ build:
     - script:
         name: maven build
         code: mvn clean assembly:assembly
+
         
 #Push the docker image with our built and tested application to the Oracle Container Registry
 push-release:
@@ -26,7 +27,38 @@ push-release:
         ports: $PORT
         cmd: sh target/bin/start
         
-        
+scan:      
+ docker: true
+  services:
+  - id: arminc/clair-db
+    tag: 2017-09-18
+    name: postgres
+  - id: arminc/clair-local-scan
+    tag: v2.0.1
+    name: clair
+  steps:
+  - script:
+    name: Install clair-scanner and pre-reqs
+    code: |
+      apt-get update
+      apt-get install -y curl docker.io
+      curl -L -O https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64
+      mv clair-scanner_linux_amd64 clair-scanner
+      chmod +x clair-scanner
+  - script:
+    name: Scan an image
+    code: |
+      docker pull alpine:3.5
+      ./clair-scanner --ip=`hostname -i` --report="report.json" --clair="http://clair:6060"  
+      cat report.json
+      OK=`grep "\"vulnerabilities\": \[\]" report.json | wc -l`
+      echo $OK
+      if [ "$OK" == "1" ]; then 
+        echo "image was clean, continuing..."
+      else
+        echo "image had vulnerability, aborting"
+        exit 1
+      fi        
         
 #Deploy our container from the Oracle Container Registry to the Oracle Container Engine (Kubernetes)
 deploy-to-cluster:

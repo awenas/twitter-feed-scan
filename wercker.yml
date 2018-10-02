@@ -42,14 +42,14 @@ scan:
     code: |
       apt-get update
       apt-get install -y curl docker.io
-      curl -L -O https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64
+      curl -L -O https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64 
       mv clair-scanner_linux_amd64 clair-scanner
       chmod +x clair-scanner
   - script:
     name: Scan an image
     code: |
       docker pull alpine:3.5
-      ./clair-scanner --ip=`hostname -i` --report="report.json" --clair="http://clair:6060"  
+      ./clair-scanner --ip=`hostname -i` --report="report.json" --clair="http://clair:6060" ${DOCKER_REPO}:${WERCKER_GIT_COMMIT} 
       cat report.json
       OK=`grep "\"vulnerabilities\": \[\]" report.json | wc -l`
       echo $OK

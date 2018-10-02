@@ -52,13 +52,7 @@ scan:
       docker pull ${DOCKER_REPO}:${WERCKER_GIT_COMMIT}
       ./clair-scanner --ip=`hostname -i` --report="report.json" --clair="http://clair:6060" ${DOCKER_REPO}:${WERCKER_GIT_COMMIT} 
       cat report.json
-      OK=`grep "\"vulnerabilities\": \[\]" report.json | wc -l`
-      echo $OK
-      if [ "$OK" == "1" ]; then 
-        echo "image was clean, continuing..."
-      else
-        echo "image had vulnerability, please fix the security issues"
-      fi        
+      
         
 #Deploy our container from the Oracle Container Registry to the Oracle Container Engine (Kubernetes)
 deploy-to-cluster:

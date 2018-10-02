@@ -28,7 +28,7 @@ push-release:
         cmd: sh target/bin/start
         
 scan:      
- docker: true
+  docker: true
   services:
   - id: arminc/clair-db
     tag: 2017-09-18

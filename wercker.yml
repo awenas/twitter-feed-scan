@@ -52,6 +52,7 @@ scan:
       docker pull ${DOCKER_REPO}:${WERCKER_GIT_COMMIT}
       ./clair-scanner --ip=`hostname -i` --report="report.json" --clair="http://clair:6060" ${DOCKER_REPO}:${WERCKER_GIT_COMMIT} 
       cat report.json
+      echo "halo halo"
       
         
 #Deploy our container from the Oracle Container Registry to the Oracle Container Engine (Kubernetes)

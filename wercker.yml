@@ -49,7 +49,7 @@ scan:
   - script:
     name: Scan an image
     code: |
-      docker pull alpine:3.5
+      docker pull ${DOCKER_REPO}:${WERCKER_GIT_COMMIT}
       ./clair-scanner --ip=`hostname -i` --report="report.json" --clair="http://clair:6060" ${DOCKER_REPO}:${WERCKER_GIT_COMMIT} 
       cat report.json
       OK=`grep "\"vulnerabilities\": \[\]" report.json | wc -l`
